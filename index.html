@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MULTI-ZERE - Мультивселенная Зере</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            background: #000000;
+            color: #FFFFFF;
+            font-family: Arial, sans-serif;
+            overflow-x: hidden;
+            padding: 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .container {
+            min-height: 100vh;
+            background: #000000;
+            color: #FFFFFF;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .header h1 {
+            margin: 5px 0;
+            font-size: 1.8em;
+            letter-spacing: 2px;
+        }
+
+        .header p {
+            margin: 0;
+            font-size: 0.9em;
+            color: #AAAAAA;
+        }
+
+        .pull-area {
+            background: #1a1a1a;
+            border: 2px solid #FFFFFF;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            min-height: 280px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .spinning {
+            font-size: 60px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 10px;
+        }
+
+        .pull-content h2 {
+            margin: 10px 0;
+            font-size: 1.4em;
+        }
+
+        .pull-content p {
+            margin: 5px 0;
+            font-size: 0.95em;
+        }
+
+        .diamond {
+            font-size: 50px;
+            margin-bottom: 10px;
+        }
+
+        .empty-diamond {
+            font-size: 50px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            font-size: 1em;
+            font-weight: bold;
+            color: #000000;
+            background: #FFFFFF;
+            border: 2px solid #FFFFFF;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-bottom: 15px;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        button:hover:not(:disabled) {
+            background: #DDDDDD;
+        }
+
+        button:disabled {
+            background: #333333;
+            color: #666666;
+            cursor: not-allowed;
+        }
+
+        .stats {
+            background: #1a1a1a;
+            border: 1px solid #444444;
+            border-radius: 3px;
+            padding: 12px;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-label {
+            color: #AAAAAA;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+
+        .stat-full {
+            grid-column: 1 / -1;
+        }
+
+        .collection {
+            background: #1a1a1a;
+            border: 1px solid #444444;
+            border-radius: 3px;
+            padding: 12px;
+            margin-bottom: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .section-title {
+            font-size: 0.85em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #AAAAAA;
+            text-transform: uppercase;
+        }
+
+        .zere-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .zere-card {
+            border: 1px solid #444444;
+            border-radius: 3px;
+            padding: 8px;
+            background: #0a0a0a;
+            opacity: 0.5;
+            font-size: 0.8em;
+        }
+
+        .zere-card.owned {
+            opacity: 1;
+            background: #1a1a2e;
+        }
+
+        .zere-name {
+            font-weight: bold;
+            margin-bottom: 3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .zere-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .zere-rarity {
+            color: #AAAAAA;
+            font-size: 0.75em;
+        }
+
+        .zere-count {
+            color: #000000;
+            padding: 2px 6px;
+            border-radius: 2px;
+            font-weight: bold;
+            font-size: 0.85em;
+        }
+
+        .history {
+            background: #1a1a1a;
+            border: 1px solid #444444;
+            border-radius: 3px;
+            padding: 12px;
+            margin-bottom: 15px;
+        }
+
+        .history-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 8px;
+        }
+
+        .history-card {
+            border: 1px solid #444444;
+            border-radius: 3px;
+            padding: 8px;
+            text-align: center;
+            background: #0a0a0a;
+            font-size: 0.75em;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>MULTI-ZERE</h1>
+            <p>Соберите все версии Зере из мультивселенной</p>
+        </div>
+
+        <div class="pull-area" id="pullArea">
+            <div class="empty-diamond">◇</div>
+            <p>Нажмите кнопку чтобы начать</p>
+        </div>
+
+        <button id="pullBtn" onclick="pullZere()">ОТКРЫТЬ ПОРТАЛ</button>
+
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-label">Попыток</div>
+                <div class="stat-value" id="pullCount">0</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Гарантия в</div>
+                <div class="stat-value" id="pityCount">90</div>
+            </div>
+            <div class="stat-item stat-full">
+                <div class="stat-label">Собранных версий</div>
+                <div class="stat-value"><span id="uniqueCount">0</span>/12</div>
+            </div>
+        </div>
+
+        <div class="collection">
+            <div class="section-title">Коллекция</div>
+            <div class="zere-grid" id="collectionGrid"></div>
+        </div>
+
+        <div class="history hidden" id="historySection">
+            <div class="section-title">История</div>
+            <div class="history-grid" id="historyGrid"></div>
+        </div>
+    </div>
+
+    <script>
+        const zereVariants = [
+            { id: 1, name: 'Зере', rarity: 'common', color: '#888888', probability: 0.20 },
+            { id: 2, name: 'Зере из прошлого', rarity: 'common', color: '#888888', probability: 0.08 },
+            { id: 3, name: 'Зере почтальон', rarity: 'common', color: '#888888', probability: 0.20 },
+            
+            { id: 4, name: 'Зере Рыцарь', rarity: 'rare', color: '#00FFFF', probability: 0.13 },
+            { id: 5, name: 'Зере из 20-ых', rarity: 'rare', color: '#00FFFF', probability: 0.12 },
+            
+            { id: 6, name: 'Зере C-131', rarity: 'epic', color: '#FF00FF', probability: 0.08 },
+            { id: 7, name: 'Зере Из пустоши', rarity: 'epic', color: '#FF00FF', probability: 0.07 },
+            
+            { id: 8, name: 'Зере C-137', rarity: 'legendary', color: '#FFFF00', probability: 0.04 },
+            { id: 9, name: 'Зере X', rarity: 'legendary', color: '#FFFF00', probability: 0.03 },
+            
+            { id: 10, name: 'Зере Прайм', rarity: 'divine', color: '#FF0000', probability: 0.02 },
+            { id: 11, name: 'Злая Зере', rarity: 'divine', color: '#FF0000', probability: 0.02 },
+            { id: 12, name: 'Зере Z-01', rarity: 'divine', color: '#FF0000', probability: 0.01 },
+        ];
+
+        const rarityConfig = {
+            common: { displayName: 'Обычная', textColor: '#FFFFFF' },
+            rare: { displayName: 'Редкая', textColor: '#00FFFF' },
+            epic: { displayName: 'Эпическая', textColor: '#FF00FF' },
+            legendary: { displayName: 'Легендарная', textColor: '#FFFF00' },
+            divine: { displayName: 'Божественная', textColor: '#FF0000' },
+        };
+
+        let gameState = {
+            collection: {},
+            lastPull: null,
+            pulls: 0,
+            pity: 0,
+            pullHistory: [],
+            isSpinning: false
+        };
+
+        // Загрузка прогресса
+        function loadProgress() {
+            const saved = localStorage.getItem('multiZereProgress');
+            if (saved) {
+                try {
+                    gameState = JSON.parse(saved);
+                } catch (e) {
+                    console.log('Ошибка загрузки');
+                }
+            }
+            renderUI();
+        }
+
+        // Сохранение прогресса
+        function saveProgress() {
+            localStorage.setItem('multiZereProgress', JSON.stringify(gameState));
+        }
+
+        function renderUI() {
+            // Обновляем pull area
+            const pullArea = document.getElementById('pullArea');
+            if (gameState.isSpinning) {
+                pullArea.innerHTML = `
+                    <div class="spinning">✦</div>
+                    <p style="font-size: 1.1em; margin: 10px 0;">Открываем портал...</p>
+                `;
+            } else if (gameState.lastPull) {
+                const rarity = gameState.lastPull.rarity;
+                const color = rarityConfig[rarity].textColor;
+                pullArea.innerHTML = `
+                    <div class="diamond" style="color: ${color}; text-shadow: 0 0 10px ${color};">◆</div>
+                    <h2 style="color: ${color};">${gameState.lastPull.name}</h2>
+                    <p style="color: ${color};">[${rarityConfig[rarity].displayName}]</p>
+                `;
+            } else {
+                pullArea.innerHTML = `
+                    <div class="empty-diamond">◇</div>
+                    <p>Нажмите кнопку чтобы начать</p>
+                `;
+            }
+
+            // Обновляем статистику
+            document.getElementById('pullCount').textContent = gameState.pulls;
+            document.getElementById('pityCount').textContent = Math.max(0, 90 - gameState.pity);
+            const uniqueCount = Object.values(gameState.collection).filter(c => c > 0).length;
+            document.getElementById('uniqueCount').textContent = uniqueCount;
+
+            // Обновляем коллекцию
+            const collectionGrid = document.getElementById('collectionGrid');
+            collectionGrid.innerHTML = zereVariants.map(zere => {
+                const count = gameState.collection[zere.id] || 0;
+                const isOwned = count > 0;
+                const borderColor = isOwned ? zere.color : '#444444';
+                const background = isOwned ? '#1a1a2e' : '#0a0a0a';
+                const opacity = isOwned ? 1 : 0.5;
+                
+                return `
+                    <div class="zere-card" style="border-color: ${borderColor}; background: ${background}; opacity: ${opacity};">
+                        <div class="zere-name" style="color: ${zere.color};">${zere.name}</div>
+                        <div class="zere-info">
+                            <span class="zere-rarity">${rarityConfig[zere.rarity].displayName}</span>
+                            <span class="zere-count" style="background: ${zere.color};">${count}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Обновляем историю
+            const historySection = document.getElementById('historySection');
+            if (gameState.pullHistory.length > 0) {
+                historySection.classList.remove('hidden');
+                const historyGrid = document.getElementById('historyGrid');
+                historyGrid.innerHTML = gameState.pullHistory.map(zere => {
+                    return `
+                        <div class="history-card" style="border-color: ${zere.color};">
+                            <div style="color: ${zere.color}; font-weight: bold; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                ${zere.name}
+                            </div>
+                            <div style="color: #AAAAAA; font-size: 0.7em;">
+                                ${rarityConfig[zere.rarity].displayName}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                historySection.classList.add('hidden');
+            }
+        }
+
+        function pullZere() {
+            if (gameState.isSpinning) return;
+            gameState.isSpinning = true;
+            document.getElementById('pullBtn').disabled = true;
+            renderUI();
+
+            setTimeout(() => {
+                let rand = Math.random();
+                let pulledZere = zereVariants[0];
+
+                if (gameState.pity >= 89) {
+                    const rareOrBetter = zereVariants.filter(z => 
+                        ['rare', 'epic', 'legendary', 'divine'].includes(z.rarity)
+                    );
+                    pulledZere = rareOrBetter[Math.floor(Math.random() * rareOrBetter.length)];
+                } else {
+                    let cumulativeProbability = 0;
+                    for (const zere of zereVariants) {
+                        cumulativeProbability += zere.probability;
+                        if (rand < cumulativeProbability) {
+                            pulledZere = zere;
+                            break;
+                        }
+                    }
+                }
+
+                // Обновляем состояние
+                gameState.collection[pulledZere.id] = (gameState.collection[pulledZere.id] || 0) + 1;
+                gameState.lastPull = pulledZere;
+                gameState.pulls++;
+                gameState.pullHistory.unshift(pulledZere);
+                gameState.pullHistory = gameState.pullHistory.slice(0, 10);
+                
+                const isRare = ['rare', 'epic', 'legendary', 'divine'].includes(pulledZere.rarity);
+                gameState.pity = isRare ? 0 : gameState.pity + 1;
+
+                gameState.isSpinning = false;
+                document.getElementById('pullBtn').disabled = false;
+                
+                saveProgress();
+                renderUI();
+            }, 2000);
+        }
+
+        // Инициализация
+        loadProgress();
+    </script>
+</body>
+</html>
