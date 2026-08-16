@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MULTI-ZERE v1.1 - Мультивселенная Зере</title>
+    <title>MULTI-ZERE v1.2 - Мультивселенная Зере</title>
     <style>
         * {
             box-sizing: border-box;
@@ -399,21 +399,19 @@
         }
 
         .settings-btn {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: var(--accent-color);
+            width: 100%;
+            padding: 12px;
+            font-size: 1em;
+            font-weight: bold;
             color: var(--bg-primary);
+            background: var(--text-primary);
             border: 2px solid var(--text-primary);
-            font-size: 1.5em;
+            border-radius: 3px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
+            margin-bottom: 15px;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .settings-btn:hover {
@@ -424,7 +422,7 @@
 <body class="theme-classic">
     <div class="container">
         <div class="header" id="header">
-            <h1>MULTI-ZERE v1.1</h1>
+            <h1>MULTI-ZERE v1.2</h1>
             <p id="headerDesc">Соберите все версии Зере из мультивселенной</p>
         </div>
 
@@ -468,7 +466,11 @@
         </div>
     </div>
 
-    <button class="settings-btn" onclick="openSettings()">⚙️</button>
+        <button class="settings-btn" onclick="openSettings()" id="settingsBtnMain">⚙️ КАСТОМИЗАЦИЯ</button>
+
+        <div style="text-align: center; color: var(--text-secondary); font-size: 0.8em; padding: 20px 10px; margin-top: 30px; border-top: 1px solid var(--border-color);">
+            Made By Barbos & Claude ❤️
+        </div>
 
     <div class="modal" id="settingsModal">
         <div class="modal-content">
@@ -612,10 +614,7 @@
             common: { displayName: 'Обычная', textColor: '#FFFFFF' },
             rare: { displayName: 'Редкая', textColor: '#00FFFF' },
             epic: { displayName: 'Эпическая', textColor: '#FF00FF' },
-            legendary: { displayName: 'Легендарная', textColor: '#FFFF00' },
-            divine: { displayName: 'Божественная', textColor: '#FF0000' },
-            ultra_rare: { displayName: 'Ультра редкая', textColor: '#FF6B9D' },
-            mythic: { displayName: 'Мифическая', textColor: '#00FF88' },
+            legendary: { displayName: 'Легендарная', textColor'#00FF88' },
             secret: { displayName: 'Секретная', textColor: '#FFFFFF' },
         };
 
